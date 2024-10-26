@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #textarea {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mon espace de notes</h1>
+    <textarea id="textarea" placeholder="Écris ici..."></textarea>
+
+    <script>
+        // Charger le contenu sauvegardé au démarrage
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedText = localStorage.getItem('savedText');
+            if (savedText) {
+                document.getElementById('textarea').value = savedText;
+            }
+        });
+
+        // Sauvegarder le contenu à chaque modification
+        document.getElementById('textarea').addEventListener('input', (event) => {
+            localStorage.setItem('savedText', event.target.value);
+        });
+    </script>
+
+</body>
+</html>
