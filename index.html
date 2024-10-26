@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de notes avec Thème Automatique</title>
+    <title>Mon Vlog</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,106 +12,87 @@
             align-items: center;
             margin: 0;
             padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
+            background-color: #f5f5f5;
         }
 
         h1 {
-            color: inherit;
+            color: #333;
         }
 
-        #textarea {
+        #new-message {
             width: 100%;
             max-width: 600px;
-            height: 300px;
+            height: 100px;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
             resize: none;
-            color: inherit;
-            background-color: inherit;
+            margin-bottom: 10px;
         }
 
-        /* Thème clair */
-        .light-mode {
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        /* Thème sombre */
-        .dark-mode {
-            background-color: #333;
-            color: #f5f5f5;
-        }
-
-        #theme-toggle {
-            margin-top: 20px;
+        #add-message {
             padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
             border: none;
             border-radius: 4px;
-            font-size: 16px;
-            color: inherit;
-            background-color: inherit;
-            border: 1px solid currentColor;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .message {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
 
-    <h1>Mon espace de notes</h1>
-    <textarea id="textarea" placeholder="Écris ici..."></textarea>
-    <button id="theme-toggle">Changer de thème</button>
+    <h1>Mon Vlog</h1>
+    <textarea id="new-message" placeholder="Écris ton message ici..."></textarea>
+    <button id="add-message">Ajouter le message</button>
+    
+    <div id="messages-container"></div>
 
     <script>
-        // Fonction pour définir le thème en fonction de l'heure
-        function setThemeAutomatically() {
-            const currentHour = new Date().getHours();
-            if (currentHour >= 18 || currentHour < 6) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark-mode');
-            } else {
-                document.body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light-mode');
-            }
-        }
-
-        // Fonction pour basculer entre les thèmes clair et sombre
-        function toggleTheme() {
-            if (document.body.classList.contains('light-mode')) {
-                document.body.classList.remove('light-mode');
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-                document.body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light-mode');
-            }
-        }
-
-        // Charger le thème en fonction du choix de l'utilisateur ou de l'heure
+        // Charger les messages sauvegardés
         document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.body.classList.add(savedTheme);
-            } else {
-                setThemeAutomatically();
-            }
+            const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+            savedMessages.forEach(message => {
+                displayMessage(message);
+            });
+        });
 
-            // Charger le texte sauvegardé
-            const savedText = localStorage.getItem('savedText');
-            if (savedText) {
-                document.getElementById('textarea').value = savedText;
+        // Afficher un message dans la liste
+        function displayMessage(content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.textContent = content;
+            document.getElementById('messages-container').prepend(messageDiv); // Ajout en haut
+        }
+
+        // Ajouter un message et sauvegarder
+        document.getElementById('add-message').addEventListener('click', () => {
+            const newMessageContent = document.getElementById('new-message').value;
+            if (newMessageContent) {
+                displayMessage(newMessageContent);
+                saveMessage(newMessageContent);
+                document.getElementById('new-message').value = ''; // Nettoyer la zone de texte
             }
         });
 
-        // Sauvegarder le contenu à chaque modification
-        document.getElementById('textarea').addEventListener('input', (event) => {
-            localStorage.setItem('savedText', event.target.value);
-        });
-
-        // Ajouter un événement pour le bouton de changement de thème
-        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        // Sauvegarder le message dans le localStorage
+        function saveMessage(content) {
+            const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+            savedMessages.push(content);
+            localStorage.setItem('messages', JSON.stringify(savedMessages));
+        }
     </script>
 
 </body>
