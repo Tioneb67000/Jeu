@@ -21,8 +21,8 @@
 
         #new-message {
             width: 100%;
-            max-width: 825px;
-            height: 200px;
+            max-width: 600px;
+            height: 100px;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ddd;
@@ -49,8 +49,6 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             background-color: #fff;
-            max-height: 150px;
-            overflow-y: auto;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -63,6 +61,7 @@
         }
 
         .message-content {
+            white-space: pre-wrap; /* Permet de conserver les retours à la ligne */
             flex: 1;
         }
 
@@ -114,7 +113,7 @@
 
             const contentDiv = document.createElement('div');
             contentDiv.classList.add('message-content');
-            contentDiv.textContent = content;
+            contentDiv.innerHTML = content.replace(/\n/g, '<br>'); // Conserve les retours à la ligne
 
             const actionsDiv = document.createElement('div');
             actionsDiv.classList.add('message-actions');
